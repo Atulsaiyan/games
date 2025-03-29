@@ -60,6 +60,9 @@ const bgmAudio = new Audio('audio/durgesh_dai.mp3');
 bgmAudio.loop = true;
 bgmAudio.volume = 0.3;
 
+// --- Audio Interaction Tracking ---
+let hasInteracted = false; // Flag to track first interaction
+
 // --- Initialization Function ---
 function init() {
     // --- Basic safety checks ---
@@ -134,9 +137,6 @@ function init() {
     // --- Initial UI Update ---
     updateHitCounter();
     updateVolumeDisplay();
-
-    // --- Start BGM (attempt) ---
-    playBGM();
 
     // --- Start the animation loop ---
     animate();
@@ -390,7 +390,14 @@ function spawnPedestrian(initialSpawn = false) {
     pedestrians.push(newPed);
 }
 
-// --- Audio Functions ---
+// --- Audio Functions with Interaction Handling ---
+function playBgmIfNotStarted() {
+    if (!hasInteracted) {
+        hasInteracted = true; // Only try this once automatically on interaction
+        playBGM(); // Attempt to play now that user interacted
+    }
+}
+
 function setupAudio() {
     if (radioTracks.length > 0) radioAudio.src = radioTracks[currentTrackIndex];
     else { 
@@ -407,13 +414,26 @@ function setupAudio() {
 }
 
 function playBGM() {
-    bgmAudio.play().catch(e => console.warn("BGM autoplay blocked..."));
-    updateBgmButton();
+    bgmAudio.play().catch(e => {
+        console.warn("BGM play attempt failed/blocked:", e.message);
+    });
+    updateBgmButton(); // Update button text based on muted state
 }
 
 function toggleBGM() {
-    bgmAudio.muted = !bgmAudio.muted; 
+    // If toggling to Unmute, ensure play is attempted
+    if (bgmAudio.muted) { // If it WAS muted, we are unmuting
+        bgmAudio.muted = false;
+        bgmAudio.play().catch(e => console.error("Could not play BGM after unmute:", e));
+    } else { // If it WAS playing, we are muting
+        bgmAudio.muted = true;
+        // No need to call pause explicitly, muting is enough
+    }
     updateBgmButton();
+    // Make sure interaction flag is set even if they just mute/unmute
+    if (!hasInteracted) {
+        hasInteracted = true;
+    }
 }
 
 function updateBgmButton() {
@@ -428,6 +448,8 @@ function playCurrentRadioTrack() {
 }
 
 function toggleRadioPlay() {
+    playBgmIfNotStarted(); // Try starting BGM on radio interaction
+    
     if (radioTracks.length === 0) return;
     if (radioAudio.paused) { 
         if (!radioAudio.src || radioAudio.src !== radioTracks[currentTrackIndex]) { 
@@ -482,6 +504,9 @@ function setupEventListeners() {
             case 'KeyA': case 'ArrowLeft': turnLeft = true; break;
             case 'KeyD': case 'ArrowRight': turnRight = true; break;
         }
+        
+        // Mark as interacted on any key press
+        playBgmIfNotStarted();
     });
     
     document.addEventListener('keyup', (event) => {
@@ -494,7 +519,11 @@ function setupEventListeners() {
     });
     
     window.addEventListener('resize', onWindowResize);
-    // Audio listeners moved to setupAudio()
+    
+    // Add click listener to the entire document to handle first interaction
+    document.addEventListener('click', () => {
+        playBgmIfNotStarted();
+    });
 }
 
 // --- Helper Functions (Resize, UI Update, Collision) ---
@@ -535,7 +564,6 @@ function checkCollision() {
         }
     }
 }
-
 
 // --- Update Functions (Car Movement, Camera) ---
 function updateCarMovement(deltaTime) {
