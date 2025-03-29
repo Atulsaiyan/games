@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Simple 3D Car Simulator V2 - Enhanced</title>
+    <link rel="stylesheet" href="css/style.css">
+
+    <!-- Load Libraries (Choose ONE method: CDN or Local) -->
+    <!-- Method B: Local Files -->
+    <!-- <script src="js/libs/three.js"></script>
+    <script src="js/libs/OrbitControls.js"></script> -->
+    <script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
+    <!-- For OrbitControls, we need a UMD build. This older version often works well -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
+</head>
+<body>
+    <!-- UI Container -->
+    <div id="ui-container">
+        <div id="hit-counter">Hits: 0</div>
+
+        <!-- Radio Controls -->
+        <div id="radio-controls">
+            Radio:
+            <button id="prev-track" title="Previous Track">⏮️</button>
+            <button id="play-pause" title="Play/Pause">▶️</button> <!-- Icon change -->
+            <button id="next-track" title="Next Track">⏭️</button>
+            <button id="vol-down" title="Volume Down">➖</button>
+            <button id="vol-up" title="Volume Up">➕</button>
+            <span id="volume-display">Vol: 100%</span> <!-- Display Volume -->
+        </div>
+
+        <!-- Background Music Control -->
+        <div id="bgm-controls">
+             <button id="toggle-bgm">Mute BGM</button>
+        </div>
+    </div>
+
+    <!-- Main JS -->
+    <script src="js/main.js"></script>
+</body>
+</html>

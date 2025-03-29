@@ -1,0 +1,50 @@
+/* ... (previous styles remain the same) ... */
+
+#ui-container {
+    /* ... (previous styles) ... */
+    position: absolute;
+    display: flex; /* Arrange items horizontally */
+    flex-direction: column; /* Stack sections vertically */
+    align-items: flex-start; /* Align items to the left */
+    top: 10px;
+    left: 10px;
+    z-index: 10px;
+    color: white;
+}
+
+#radio-controls, #bgm-controls {
+    margin-top: 5px; /* Add some space between sections */
+    display: flex; /* Arrange buttons horizontally */
+    align-items: center; /* Vertically align items in the row */
+}
+
+#radio-controls button, #bgm-controls button {
+    background-color: #444;
+    color: white;
+    border: none;
+    padding: 5px 8px; /* Adjust padding slightly */
+    cursor: pointer;
+    border-radius: 3px;
+    margin-left: 5px; /* Space between buttons */
+    min-width: 25px; /* Ensure minimum width */
+    text-align: center;
+}
+#radio-controls button:first-child, #bgm-controls button:first-child {
+    margin-left: 0; /* No left margin for the first button in each group */
+}
+
+#radio-controls button:hover, #bgm-controls button:hover {
+    background-color: white;
+}
+
+#volume-display {
+    margin-left: 10px;
+    font-size: 14px;
+    min-width: 60px; /* Give it some space */
+}
+
+#bgm-controls {
+     margin-top: 10px; /* More space above BGM control */
+}
+
+/* ... (rest of your styles if any) ... */
